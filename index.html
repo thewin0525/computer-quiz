@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบทดสอบความรู้คอมพิวเตอร์เบื้องต้น The Great Tutor ติวสอบทหาร ตำรวจ อุบล</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0E1A2B;
+    --ink-2:#16273D;
+    --ink-3:#1E3350;
+    --line:#2A3E5C;
+    --text:#EDF1F5;
+    --muted:#8FA0B8;
+    --gold:#E4B43C;
+    --gold-dim:#8a712c;
+    --green:#4FAE7D;
+    --red:#E2634F;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% -10%, #17304f 0%, transparent 45%),
+      radial-gradient(circle at 100% 10%, #14243a 0%, transparent 50%),
+      var(--ink);
+    color:var(--text);
+    font-family:'Sarabun',sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .stage{
+    max-width:760px;
+    margin:0 auto;
+    padding:36px 20px 80px;
+  }
+
+  /* ===== Header / masthead ===== */
+  .masthead{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:16px;
+    border-bottom:1px solid var(--line);
+    padding-bottom:18px;
+    margin-bottom:28px;
+  }
+  .masthead .kicker{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    letter-spacing:.14em;
+    color:var(--gold);
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .masthead h1{
+    font-size:26px;
+    font-weight:800;
+    margin:0;
+    line-height:1.25;
+  }
+  .masthead .code{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--muted);
+    text-align:right;
+    white-space:nowrap;
+  }
+
+  /* ===== Landing: category seals ===== */
+  .intro-text{
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.75;
+    margin-bottom:28px;
+  }
+  .full-test-btn{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    width:100%;
+    background:linear-gradient(135deg,#233a5c,#182b47);
+    border:1px solid var(--gold-dim);
+    color:var(--text);
+    border-radius:var(--radius);
+    padding:18px 22px;
+    cursor:pointer;
+    font-family:'Sarabun',sans-serif;
+    text-align:left;
+    margin-bottom:26px;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .full-test-btn:hover{ transform:translateY(-2px); border-color:var(--gold); }
+  .full-test-btn .ft-title{ font-size:17px; font-weight:700; }
+  .full-test-btn .ft-sub{ font-size:12.5px; color:var(--muted); margin-top:4px; font-family:'IBM Plex Mono',monospace; }
+  .full-test-btn .ft-arrow{ font-size:22px; color:var(--gold); }
+
+  .section-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin:6px 0 12px;
+  }
+
+  .cat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  @media (max-width:520px){ .cat-grid{ grid-template-columns:1fr; } }
+
+  .cat-card{
+    position:relative;
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:16px 16px 14px;
+    cursor:pointer;
+    text-align:left;
+    color:var(--text);
+    font-family:'Sarabun',sans-serif;
+    transition:border-color .15s ease, transform .15s ease;
+    overflow:hidden;
+  }
+  .cat-card:hover{ border-color:var(--gold-dim); transform:translateY(-2px); }
+  .cat-card .num{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--gold);
+    letter-spacing:.1em;
+  }
+  .cat-card .title{
+    font-size:15.5px;
+    font-weight:700;
+    margin:6px 0 8px;
+    line-height:1.35;
+  }
+  .cat-card .count{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11.5px;
+    color:var(--muted);
+  }
+  .cat-card .seal{
+    position:absolute;
+    right:-10px; top:-10px;
+    width:64px;height:64px;
+    border-radius:50%;
+    border:1.5px dashed var(--line);
+    opacity:.5;
+  }
+
+  /* ===== Quiz screen ===== */
+  .quiz-topbar{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin-bottom:22px;
+  }
+  .quiz-topbar .exit{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--muted);
+    background:none;
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:6px 10px;
+    cursor:pointer;
+  }
+  .quiz-topbar .exit:hover{ border-color:var(--gold-dim); color:var(--text); }
+  .progress-track{
+    flex:1;
+    height:6px;
+    background:var(--ink-3);
+    border-radius:4px;
+    overflow:hidden;
+    display:flex;
+    gap:2px;
+  }
+  .progress-seg{
+    flex:1;
+    height:100%;
+    background:var(--line);
+    border-radius:2px;
+  }
+  .progress-seg.done{ background:var(--gold); }
+  .quiz-topbar .score{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--gold);
+    white-space:nowrap;
+  }
+
+  .q-code{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12px;
+    color:var(--muted);
+    letter-spacing:.08em;
+    margin-bottom:10px;
+  }
+  .q-code .tag{
+    color:var(--gold);
+  }
+  .q-card{
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:26px 24px 22px;
+  }
+  .q-text{
+    font-size:19px;
+    font-weight:600;
+    line-height:1.55;
+    margin:0 0 20px;
+  }
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .opt{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:var(--ink-3);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:13px 15px;
+    cursor:pointer;
+    text-align:left;
+    color:var(--text);
+    font-family:'Sarabun',sans-serif;
+    font-size:15px;
+    transition:border-color .12s ease, background .12s ease;
+  }
+  .opt:hover:not(.locked){ border-color:var(--gold-dim); }
+  .opt .letter{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    font-weight:600;
+    color:var(--gold);
+    width:22px;
+    height:22px;
+    border:1px solid var(--gold-dim);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+  .opt.correct{ background:rgba(79,174,125,.16); border-color:var(--green); }
+  .opt.correct .letter{ background:var(--green); color:#0E1A2B; border-color:var(--green); }
+  .opt.wrong{ background:rgba(226,99,79,.14); border-color:var(--red); }
+  .opt.wrong .letter{ background:var(--red); color:#0E1A2B; border-color:var(--red); }
+  .opt.locked{ cursor:default; }
+  .opt.dim{ opacity:.5; }
+
+  .feedback-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-top:20px;
+    min-height:38px;
+  }
+  .feedback-text{
+    font-size:13.5px;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .feedback-text.ok{ color:var(--green); }
+  .feedback-text.no{ color:var(--red); }
+  .next-btn{
+    background:var(--gold);
+    color:#1a1305;
+    border:none;
+    border-radius:9px;
+    padding:11px 22px;
+    font-family:'Sarabun',sans-serif;
+    font-weight:700;
+    font-size:14.5px;
+    cursor:pointer;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .15s ease;
+  }
+  .next-btn.show{ opacity:1; pointer-events:auto; }
+  .next-btn:hover{ filter:brightness(1.08); }
+
+  /* ===== Result screen ===== */
+  .result-wrap{ text-align:center; padding-top:10px; }
+  .stamp{
+    width:150px; height:150px;
+    margin:10px auto 22px;
+    border-radius:50%;
+    border:3px solid var(--gold);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    position:relative;
+    transform:rotate(-6deg);
+  }
+  .stamp::before{
+    content:"";
+    position:absolute; inset:8px;
+    border:1px dashed var(--gold-dim);
+    border-radius:50%;
+  }
+  .stamp .stamp-pct{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:34px;
+    font-weight:600;
+    color:var(--gold);
+  }
+  .stamp .stamp-label{
+    font-size:13px;
+    font-weight:700;
+    color:var(--gold);
+    letter-spacing:.06em;
+    margin-top:2px;
+  }
+  .result-headline{
+    font-size:22px;
+    font-weight:800;
+    margin:0 0 6px;
+  }
+  .result-sub{
+    color:var(--muted);
+    font-size:14.5px;
+    margin-bottom:30px;
+  }
+  .breakdown{
+    text-align:left;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:30px;
+  }
+  .bd-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:10px 14px;
+  }
+  .bd-row .bd-name{ flex:1; font-size:13.5px; }
+  .bd-row .bd-bar{
+    width:120px; height:6px;
+    background:var(--ink-3);
+    border-radius:4px;
+    overflow:hidden;
+  }
+  .bd-row .bd-fill{ height:100%; background:var(--gold); }
+  .bd-row .bd-score{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:12.5px;
+    color:var(--muted);
+    width:44px;
+    text-align:right;
+  }
+  .result-actions{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .btn{
+    font-family:'Sarabun',sans-serif;
+    font-weight:700;
+    font-size:14.5px;
+    border-radius:9px;
+    padding:12px 22px;
+    cursor:pointer;
+    border:1px solid var(--line);
+    background:var(--ink-2);
+    color:var(--text);
+  }
+  .btn.primary{ background:var(--gold); color:#1a1305; border:none; }
+  .btn:hover{ border-color:var(--gold-dim); }
+
+  .review-list{ text-align:left; margin-top:34px; display:none; flex-direction:column; gap:10px; }
+  .review-list.show{ display:flex; }
+  .review-item{
+    background:var(--ink-2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .review-item .rq{ font-size:14px; font-weight:600; margin-bottom:6px; }
+  .review-item .ra{ font-family:'IBM Plex Mono',monospace; font-size:12.5px; }
+  .review-item .ra.your{ color:var(--red); }
+  .review-item .ra.right{ color:var(--green); margin-top:2px; }
+
+  .hidden{ display:none !important; }
+  .footer-note{
+    text-align:center;
+    color:var(--muted);
+    font-size:11.5px;
+    font-family:'IBM Plex Mono',monospace;
+    margin-top:40px;
+    opacity:.6;
+  }
+
+.login-card{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:24px;display:flex;flex-direction:column;gap:16px}
+.login-card label,.dcard label{display:flex;flex-direction:column;gap:6px;font-size:13.5px;color:var(--muted)}
+input,select{background:var(--ink-3);border:1px solid var(--line);border-radius:9px;padding:12px 13px;color:var(--text);font:16px 'Sarabun',sans-serif}
+input:focus,select:focus{outline:2px solid var(--gold-dim);border-color:var(--gold)}
+.mono{font-family:'IBM Plex Mono',monospace;letter-spacing:.2em}
+.err{color:var(--red);font-size:13.5px;min-height:18px}
+.dash-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.dcard{background:var(--ink-2);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:16px}
+.dcard h3{margin:0 0 12px;font-size:16px}
+.frow{display:grid;grid-template-columns:2fr 1fr 1.4fr auto;gap:10px;align-items:end}
+@media(max-width:600px){.frow{grid-template-columns:1fr}}
+.srow{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;cursor:pointer;background:var(--ink-3)}
+.srow.sel{border-color:var(--gold)}
+.srow .sn{flex:1;font-weight:600;font-size:14.5px}.srow small{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:11.5px}
+.pill{font-size:11.5px;padding:3px 9px;border-radius:20px;border:1px solid var(--green);color:var(--green)}.pill.off{border-color:var(--red);color:var(--red)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+@media(max-width:600px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{background:var(--ink-3);border-radius:10px;padding:12px}.kpi b{display:block;font:600 24px 'IBM Plex Mono',monospace;color:var(--gold)}.kpi span{font-size:12px;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-weight:500;font-size:12px}
+td.n{font-family:'IBM Plex Mono',monospace}.sm{padding:7px 12px;font-size:13px}
+.hbar{height:8px;background:var(--ink-3);border-radius:4px;overflow:hidden;flex:1}.hbar i{display:block;height:100%;background:var(--gold)}
+.tw{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <div class="masthead">
+    <div>
+      <div class="kicker">แบบทดสอบออนไลน์</div>
+      <h1>ความรู้คอมพิวเตอร์เบื้องต้น</h1>
+    </div>
+    <div class="code" id="masthead-code">EX-2026-IT100</div>
+  </div>
+
+  <!-- ===== LANDING ===== -->
+  <div id="screen-landing">
+    <p class="intro-text">กรอกชื่อและ PIN ที่ผู้ติวให้ เพื่อเริ่มทำแบบทดสอบ คะแนนจะถูกส่งให้ผู้ติวอัตโนมัติเมื่อทำเสร็จ</p>
+    <div class="login-card">
+      <label>ชื่อ-นามสกุล<input id="in-name" maxlength="60" autocomplete="name" placeholder="เช่น สมชาย ใจดี"></label>
+      <label>PIN ของการสอบ<input id="in-pin" inputmode="numeric" maxlength="8" placeholder="ตัวเลข 4–8 หลัก" class="mono"></label>
+      <div class="err" id="login-err"></div>
+      <button class="btn primary" id="enter-btn" onclick="enterTest()">เข้าสู่การสอบ →</button>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div id="screen-quiz" class="hidden">
+    <div class="quiz-topbar">
+      <button class="exit" onclick="exitQuiz()">← ออกจากแบบทดสอบ</button>
+      <div class="progress-track" id="progress-track"></div>
+      <div class="score" id="live-score">0/0</div>
+    </div>
+    <div class="q-code" id="q-code"></div>
+    <div class="q-card">
+      <p class="q-text" id="q-text"></p>
+      <div class="options" id="q-options"></div>
+      <div class="feedback-row">
+        <div class="feedback-text" id="feedback-text"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">ข้อถัดไป →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RESULT ===== -->
+  <div id="screen-result" class="hidden">
+    <div class="result-wrap">
+      <div class="stamp" id="stamp">
+        <div class="stamp-pct" id="stamp-pct">0%</div>
+        <div class="stamp-label" id="stamp-label">ผ่าน</div>
+      </div>
+      <h2 class="result-headline" id="result-headline"></h2>
+      <p class="result-sub" id="result-sub"></p>
+
+      <div class="breakdown" id="breakdown"></div>
+
+      <div class="result-actions">
+        
+        <button class="btn" onclick="showReview()">ดูข้อที่ตอบผิด</button>
+        <button class="btn" onclick="backToLanding()">กลับหน้าหลัก</button>
+      </div>
+
+      <div class="review-list" id="review-list"></div>
+    </div>
+  </div>
+
+  <div id="screen-dash" class="hidden">
+    <div class="dash-head"><a href="#" class="exit" style="text-decoration:none">← หน้านักเรียน</a><span class="mono" style="color:var(--gold)">แดชบอร์ดผู้ติว</span></div>
+    <div id="dash-body"><p class="intro-text">กำลังโหลด…</p></div>
+  </div>
+  <div class="footer-note">ระบบทดสอบนี้ทำงานในเบราว์เซอร์ · <a href="#tutor" style="color:inherit">สำหรับผู้ติว</a></div>
+</div>
+
+<script>
+const LETTERS = ['ก','ข','ค','ง'];
+
+const CATEGORIES = [
+{
+  name: "ฮาร์ดแวร์และสถาปัตยกรรมคอมพิวเตอร์",
+  short: "หมวด 1 · ฮาร์ดแวร์",
+  questions: [
+    ["อุปกรณ์ใดทำหน้าที่เป็นศูนย์กลางในการเชื่อมต่ออุปกรณ์คอมพิวเตอร์ทั้งหมดเข้าด้วยกัน?", ["CPU","Mainboard","Hard Disk","RAM"], 1],
+    ["หน่วยประมวลผลกลาง (CPU) มีหน้าที่หลักคืออะไร?", ["จัดเก็บข้อมูลถาวร","แสดงผลภาพ","คำนวณและประมวลผลคำสั่ง","เชื่อมต่อเครือข่าย"], 2],
+    ["ข้อใดคือหน่วยความจำหลักที่ข้อมูลจะสูญหายทันทีเมื่อไม่มีกระแสไฟฟ้า?", ["ROM","Flash Drive","Hard Disk","RAM"], 3],
+    ["อุปกรณ์ในข้อใดเป็นทั้งอุปกรณ์รับและแสดงผลข้อมูล (Input/Output Device)?", ["Keyboard","Monitor","Touch Screen","Printer"], 2],
+    ["พอร์ตประเภทใดที่นิยมใช้เชื่อมต่อจอภาพเพื่อให้ได้ความละเอียดสูงในปัจจุบัน?", ["VGA","HDMI","PS/2","Serial Port"], 1],
+    ["ข้อใดคืออุปกรณ์จัดเก็บข้อมูลแบบ Solid State ที่ทำงานเร็วกว่าฮาร์ดดิสก์แบบจานหมุน?", ["HDD","SSD","CD-ROM","Floppy Disk"], 1],
+    ["ขนาดของข้อมูล 1 กิกะไบต์ (GB) มีค่าเท่ากับข้อใด?", ["1,024 MB","1,024 KB","1,000 MB","1,000 KB"], 0],
+    ["อุปกรณ์ใดทำหน้าที่แปลงสัญญาณดิจิทัลเป็นอนาล็อก และอนาล็อกเป็นดิจิทัล?", ["Router","Switch","Modem","Hub"], 2],
+    ["ข้อใดจัดเป็นฮาร์ดแวร์ทั้งหมด?", ["เมาส์, วินโดวส์, คีย์บอร์ด","จอภาพ, แรม, ซีพียู","เครื่องพิมพ์, เวิร์ด, ฮาร์ดดิสก์","สแกนเนอร์, ไลน์, ลำโพง"], 1],
+    ["ปุ่มใดบนคีย์บอร์ดที่ใช้สำหรับลบตัวอักษรที่อยู่ด้านขวาของเคอร์เซอร์?", ["Backspace","Delete","Insert","Spacebar"], 1],
+    ["การทำงานของเครื่องสแกนเนอร์ (Scanner) จัดอยู่ในหน่วยใดของคอมพิวเตอร์?", ["หน่วยรับข้อมูล","หน่วยแสดงผล","หน่วยประมวลผล","หน่วยความจำ"], 0],
+    ["หน่วยความจำชนิดใดที่ใช้อ่านได้อย่างเดียว ไม่สามารถแก้ไขข้อมูลได้ตามปกติ?", ["RAM","Cache","ROM","Register"], 2],
+    ["เครื่องสำรองไฟที่ช่วยป้องกันความเสียหายจากไฟตกไฟดับเรียกว่าอะไร?", ["PSU","UPS","CPU","GPU"], 1],
+    ["ข้อใดคือหน่วยวัดความเร็วในการทำงานของ CPU?", ["Byte","Hertz (Hz)","Pixel","DPI"], 1],
+    ["อุปกรณ์ใดมีหน้าที่จัดการการแสดงผลกราฟิกโดยเฉพาะเพื่อลดภาระ CPU?", ["GPU","ROM","SSD","NIC"], 0],
+  ]
+},
+{
+  name: "ระบบปฏิบัติการและซอฟต์แวร์",
+  short: "หมวด 2 · OS & ซอฟต์แวร์",
+  questions: [
+    ["ซอฟต์แวร์ประเภทใดที่ทำหน้าที่ควบคุมการทำงานของฮาร์ดแวร์ทั้งหมดในเครื่อง?", ["ซอฟต์แวร์ประยุกต์","ระบบปฏิบัติการ","โปรแกรมอรรถประโยชน์","ซอฟต์แวร์สำเร็จรูป"], 1],
+    ["ข้อใดคือระบบปฏิบัติการแบบ Open Source ที่เปิดให้ใช้งานและแก้ไขฟรี?", ["Windows 11","macOS","Linux","iOS"], 2],
+    ["คีย์ลัดใดในระบบปฏิบัติการ Windows ใช้สำหรับการสลับหน้าต่างโปรแกรมที่เปิดอยู่?", ["Alt + Tab","Ctrl + Esc","Win + D","Shift + Delete"], 0],
+    ["การกดปุ่ม Win + L ใน Windows มีผลอย่างไร?", ["เปิดหน้าต่างใหม่","ค้นหาไฟล์","ล็อกหน้าจอคอมพิวเตอร์","ปิดเครื่อง"], 2],
+    ["นามสกุลไฟล์ .pdf เป็นรูปแบบเอกสารของโปรแกรมค่ายใด?", ["Microsoft","Adobe","Google","Apple"], 1],
+    ["หากโปรแกรมค้าง ไม่ตอบสนอง (Not Responding) ควรใช้คีย์ลัดใดเพื่อเรียก Task Manager?", ["Ctrl + Shift + Esc","Alt + F4","Win + E","Ctrl + P"], 0],
+    ["ไฟล์ที่มีนามสกุล .zip หรือ .rar เป็นไฟล์ประเภทใด?", ["ไฟล์ภาพเคลื่อนไหว","ไฟล์เสียง","ไฟล์เอกสาร","ไฟล์ที่ถูกบีบอัด"], 3],
+    ["คีย์ลัด Ctrl + A ใช้ทำอะไรในระบบปฏิบัติการทั่วไป?", ["บันทึกข้อมูล","คัดลอกข้อมูล","เลือกข้อมูลทั้งหมด","พิมพ์เอกสาร"], 2],
+    ["ฟังก์ชันใดใน Windows ที่ใช้กู้คืนระบบกลับไปยังจุดที่ตั้งค่าไว้ก่อนหน้าเมื่อเครื่องมีปัญหา?", ["Disk Cleanup","System Restore","Defragmenter","Task Scheduler"], 1],
+    ["การลบไฟล์โดยไม่ให้ไปพักใน Recycle Bin ต้องกดปุ่มใด?", ["Ctrl + Delete","Alt + Delete","Shift + Delete","Win + Delete"], 2],
+    ["โปรแกรมใดจัดเป็นซอฟต์แวร์ประเภท Web Browser ทั้งหมด?", ["Chrome, Edge, Safari","Word, Excel, PowerPoint","Facebook, LINE, X","Windows, Linux, Android"], 0],
+    ["ซอฟต์แวร์ที่พัฒนาขึ้นมาเฉพาะงาน เช่น ระบบจัดการฐานข้อมูลทะเบียนราษฎร เรียกว่าอะไร?", ["System Software","Tailor-made Software","Package Software","Utility Software"], 1],
+    ["ข้อใดคือโปรแกรมจัดการไฟล์พื้นฐานในระบบปฏิบัติการ Windows?", ["Finder","File Explorer","Safari","Terminal"], 1],
+    ["แถบที่อยู่ด้านล่างสุดของหน้าจอ Windows ซึ่งแสดงโปรแกรมที่กำลังทำงานอยู่เรียกว่าอะไร?", ["Title Bar","Menu Bar","Status Bar","Taskbar"], 3],
+    ["ข้อใดคือระบบปฏิบัติการที่ออกแบบมาสำหรับอุปกรณ์พกพา?", ["macOS","Unix","Android","MS-DOS"], 2],
+  ]
+},
+{
+  name: "Microsoft Word",
+  short: "หมวด 3 · Word",
+  questions: [
+    ["ใน Microsoft Word การจัดข้อความให้อยู่กึ่งกลางหน้ากระดาษ ต้องกดคีย์ลัดใด?", ["Ctrl + L","Ctrl + R","Ctrl + E","Ctrl + J"], 2],
+    ["คีย์ลัด Ctrl + Z ในโปรแกรม Office มีหน้าที่ทำอะไร?", ["ย้อนกลับการกระทำล่าสุด (Undo)","ทำซ้ำ (Redo)","บันทึกเอกสาร (Save)","สร้างไฟล์ใหม่ (New)"], 0],
+    ["ฟีเจอร์ใดใน Word ใช้สำหรับสร้างจดหมายที่มีเนื้อหาเหมือนกัน แต่ส่งให้ผู้รับหลายคน?", ["Macro","Mail Merge (จดหมายเวียน)","Track Changes","Cross-reference"], 1],
+    ["คีย์ลัดใดใช้สำหรับค้นหาข้อความในเอกสาร Word?", ["Ctrl + F","Ctrl + H","Ctrl + G","Ctrl + S"], 0],
+    ["นามสกุลไฟล์มาตรฐานของ Microsoft Word รุ่นปัจจุบันคือข้อใด?", [".doc",".docx",".txt",".rtf"], 1],
+    ["การปรับข้อความให้กระจายเต็มบรรทัดเท่ากันทั้งซ้ายและขวาคือคำสั่งใด?", ["Align Left","Center","Justify","Align Right"], 2],
+    ["หากต้องการพิมพ์ตัวห้อย (Subscript) ในโปรแกรม Word ต้องใช้คีย์ลัดใด?", ["Ctrl + =","Ctrl + Shift + +","Ctrl + B","Ctrl + U"], 0],
+    ["มุมมอง (View) ใดใน Word ที่แสดงเอกสารตามที่จะปรากฏเมื่อพิมพ์ออกกระดาษ?", ["Read Mode","Print Layout","Web Layout","Outline"], 1],
+    ["คำสั่ง \"Find and Replace\" ใช้คีย์ลัดใด?", ["Ctrl + F","Ctrl + H","Ctrl + R","Ctrl + K"], 1],
+    ["แถบเครื่องมือที่รวมคำสั่งหลักของโปรแกรม Word แบ่งเป็นแท็บต่างๆ เรียกว่าอะไร?", ["Status Bar","Ribbon","Scroll Bar","Quick Access Toolbar"], 1],
+    ["การบังคับขึ้นหน้ากระดาษใหม่ (Page Break) ทันที ต้องกดคีย์ลัดใด?", ["Enter","Shift + Enter","Ctrl + Enter","Alt + Enter"], 2],
+    ["คำสั่ง Format Painter (ตัวคัดลอกรูปแบบ) มีรูปสัญลักษณ์เป็นรูปอะไร?", ["กรรไกร","แปรงทาสี","ดินสอ","ยางลบ"], 1],
+    ["หากต้องการใส่เลขหน้าเอกสาร ต้องไปที่แท็บเมนูใด?", ["Home","Insert","Design","Layout"], 1],
+    ["ฟีเจอร์ Track Changes มีประโยชน์ในกรณีใด?", ["ป้องกันไม่ให้ผู้อื่นเปิดไฟล์","ติดตามร่องรอยการแก้ไขเอกสาร","สร้างสารบัญอัตโนมัติ","แปลภาษา"], 1],
+    ["การทำตัวหนา (Bold) ในข้อความใช้คีย์ลัดใด?", ["Ctrl + I","Ctrl + U","Ctrl + B","Ctrl + D"], 2],
+  ]
+},
+{
+  name: "Microsoft Excel",
+  short: "หมวด 4 · Excel",
+  questions: [
+    ["ฟังก์ชันใดใน Excel ใช้สำหรับหาค่าเฉลี่ยของกลุ่มตัวเลข?", ["=SUM()","=MAX()","=MIN()","=AVERAGE()"], 3],
+    ["ข้อใดคือสัญลักษณ์ที่ต้องใช้เริ่มต้นการเขียนสูตรใน Excel ทุกครั้ง?", ["+","-","=","#"], 2],
+    ["การล็อกเซลล์แบบสัมบูรณ์ (Absolute Reference) ในสูตร Excel ต้องใช้เครื่องหมายใด?", ["$","&","@","%"], 0],
+    ["ฟังก์ชันใดใช้สำหรับการค้นหาข้อมูลในตารางในแนวตั้ง?", ["HLOOKUP","VLOOKUP","SEARCH","MATCH"], 1],
+    ["หากต้องการนับจำนวนเซลล์ที่มีเฉพาะตัวเลข ต้องใช้ฟังก์ชันใด?", ["COUNT()","COUNTA()","COUNTIF()","COUNTBLANK()"], 0],
+    ["สัญลักษณ์ใดใช้แทนเครื่องหมายคูณในสูตร Excel?", ["x","*","/","^"], 1],
+    ["นามสกุลไฟล์เริ่มต้นของ Microsoft Excel รุ่นปัจจุบันคือข้อใด?", [".xls",".xlsx",".csv",".xlsm"], 1],
+    ["หากเซลล์ใน Excel แสดงผลลัพธ์เป็น #DIV/0! หมายความว่าอย่างไร?", ["คอลัมน์แคบเกินไป","ตัวเลขมีค่าเป็นลบ","มีการนำตัวเลขไปหารด้วยศูนย์","พิมพ์ชื่อสูตรผิด"], 2],
+    ["เซลล์ที่เกิดจากการตัดกันของคอลัมน์ C และแถวที่ 5 มีชื่ออ้างอิงว่าอย่างไร?", ["5C","C5","C-5","5-C"], 1],
+    ["ฟังก์ชันใดใช้สร้างเงื่อนไขในการคำนวณ เช่น ถ้าคะแนนมากกว่า 50 ให้แสดง \"ผ่าน\"?", ["=IF()","=SUMIF()","=VLOOKUP()","=AND()"], 0],
+    ["การรวมเซลล์หลายๆ เซลล์ให้เป็นเซลล์เดียวและจัดข้อความไว้กึ่งกลางคือคำสั่งใด?", ["Wrap Text","Merge & Center","Format Cells","Align Center"], 1],
+    ["ข้อใดคือฟังก์ชันสำหรับหาค่าที่มากที่สุดในกลุ่มข้อมูล?", ["=MAX()","=MIN()","=HIGH()","=TOP()"], 0],
+    ["แผนภูมิ (Chart) ชนิดใดเหมาะสำหรับการเปรียบเทียบสัดส่วนที่เป็นเปอร์เซ็นต์รวมให้ได้ 100%?", ["แผนภูมิแท่ง","แผนภูมิเส้น","แผนภูมิวงกลม","แผนภูมิจุด"], 2],
+    ["คีย์ลัดใดใน Excel ใช้สำหรับสร้างแผนภูมิอย่างรวดเร็วจากข้อมูลที่เลือก?", ["F1","F5","F11","F12"], 2],
+    ["คำสั่ง Freeze Panes ใช้ทำอะไรใน Excel?", ["ล็อกคอลัมน์หรือแถวไม่ให้เลื่อนเมื่อสกรอลล์หน้าจอ","ซ่อนข้อมูลสำคัญ","ล็อกรหัสผ่านไฟล์","แช่แข็งสูตรไม่ให้คำนวณ"], 0],
+  ]
+},
+{
+  name: "Microsoft PowerPoint",
+  short: "หมวด 5 · PowerPoint",
+  questions: [
+    ["คีย์ลัดใดใช้เริ่มนำเสนอสไลด์ (Slide Show) ตั้งแต่หน้าแรกสุด?", ["F2","F5","Shift + F5","Ctrl + F5"], 1],
+    ["หากต้องการนำเสนอสไลด์จากหน้าที่กำลังเปิดอยู่ (หน้าปัจจุบัน) ต้องกดคีย์ลัดใด?", ["F5","Shift + F5","Alt + F5","Ctrl + F5"], 1],
+    ["นามสกุลไฟล์ใดของ PowerPoint ที่เมื่อเปิดแล้วจะเข้าสู่โหมดนำเสนอทันที?", [".pptx",".potx",".ppsx",".pdf"], 2],
+    ["คีย์ลัดใดใช้เพิ่มหน้าสไลด์ใหม่ (New Slide)?", ["Ctrl + M","Ctrl + N","Ctrl + S","Ctrl + P"], 0],
+    ["การเปลี่ยนหน้าสไลด์จากแผ่นหนึ่งไปอีกแผ่นหนึ่งด้วยเอฟเฟกต์ต่างๆ เรียกว่าอะไร?", ["Animation","Transition","Design","Layout"], 1],
+    ["ขณะกำลังนำเสนอสไลด์ หากต้องการทำให้หน้าจอเป็นสีดำชั่วคราวต้องกดปุ่มใด?", ["W","Esc","B","Enter"], 2],
+    ["มุมมองใดเหมาะที่สุดสำหรับการสลับลำดับสไลด์จำนวนมาก?", ["Normal","Outline","Slide Sorter","Reading View"], 2],
+    ["การทำซ้ำวัตถุ (Duplicate) อย่างรวดเร็วในหน้าสไลด์ ต้องกดคีย์ลัดใด?", ["Ctrl + D","Ctrl + C","Ctrl + V","Ctrl + X"], 0],
+    ["ฟีเจอร์ใดที่ทำให้ผู้บรรยายเห็นบันทึกย่อ (Notes) แต่ผู้ชมมองไม่เห็น?", ["Reading View","Slide Master","Presenter View","Handout Master"], 2],
+    ["การปรับแก้โครงสร้างพื้นฐานหรือโลโก้ให้เหมือนกันทุกสไลด์อย่างรวดเร็ว ควรทำที่ใด?", ["Slide Sorter","Slide Master","Transitions","Animations"], 1],
+  ]
+},
+{
+  name: "เครือข่ายและอินเทอร์เน็ต",
+  short: "หมวด 6 · เครือข่าย",
+  questions: [
+    ["ระบบเครือข่ายภายในองค์กรที่มีการกำหนดพื้นที่จำกัด เช่น ในอาคารเดียวกัน เรียกว่าอะไร?", ["LAN","WAN","MAN","PAN"], 0],
+    ["เครือข่ายใดที่มีขนาดใหญ่ที่สุดครอบคลุมทั่วโลก?", ["LAN","MAN","WAN","Intranet"], 2],
+    ["IP Address เปรียบได้กับสิ่งใดในโลกความจริง?", ["เลขที่บ้าน","ทะเบียนรถ","เบอร์โทรศัพท์","ชื่อบริษัท"], 0],
+    ["อุปกรณ์ใดทำหน้าที่หาเส้นทางที่ดีที่สุดในการส่งข้อมูลข้ามเครือข่าย?", ["Switch","Hub","Router","Access Point"], 2],
+    ["โปรโตคอลใดใช้สำหรับรับส่งไฟล์ข้อมูลข้ามเครือข่าย?", ["HTTP","FTP","SMTP","POP3"], 1],
+    ["HTTPS ต่างจาก HTTP อย่างไร?", ["ดาวน์โหลดได้เร็วกว่า","รองรับรูปภาพความละเอียดสูง","มีการเข้ารหัสข้อมูลเพื่อความปลอดภัย","ใช้ได้เฉพาะบนมือถือ"], 2],
+    ["URL (Uniform Resource Locator) คืออะไร?", ["รหัสผ่านเข้าเว็บ","ที่อยู่ของเว็บไซต์บนอินเทอร์เน็ต","โปรแกรมต้านไวรัส","สายสัญญาณอินเทอร์เน็ต"], 1],
+    ["การเชื่อมต่ออินเทอร์เน็ตแบบไร้สายระยะใกล้ที่ใช้กับโทรศัพท์มือถือและหูฟังคือข้อใด?", ["Wi-Fi","Bluetooth","5G","Fiber Optic"], 1],
+    ["โดเมนเนม (Domain Name) ที่ลงท้ายด้วย .go.th หมายถึงหน่วยงานประเภทใดในไทย?", ["องค์กรการศึกษา","องค์กรธุรกิจ","หน่วยงานรัฐบาล","องค์กรไม่แสวงหาผลกำไร"], 2],
+    ["ระบบใดทำหน้าที่แปลงชื่อโดเมน (เช่น www.google.com) ให้เป็นหมายเลข IP Address?", ["DHCP","DNS","FTP","HTTP"], 1],
+    ["การโจมตีด้วยการส่งคำขอจำนวนมหาศาลไปยังเซิร์ฟเวอร์จนระบบล่ม ใช้งานไม่ได้ เรียกว่าอะไร?", ["Phishing","Malware","DDoS","Spam"], 2],
+    ["อีเมลหลอกลวงที่ปลอมแปลงเป็นธนาคารเพื่อให้เราคลิกลิงก์และกรอกรหัสผ่าน เรียกว่าอะไร?", ["Phishing","Hacking","Sniffing","Spoofing"], 0],
+    ["ซอฟต์แวร์หรือฮาร์ดแวร์ที่ทำหน้าที่กรองข้อมูลและป้องกันการบุกรุกจากภายนอกเข้าสู่เครือข่ายภายในคืออะไร?", ["Antivirus","Firewall","Gateway","Proxy"], 1],
+    ["โปรโตคอลใดที่ใช้สำหรับการส่งอีเมล?", ["FTP","SMTP","HTTP","DHCP"], 1],
+    ["การทำ VPN (Virtual Private Network) มีวัตถุประสงค์หลักเพื่ออะไร?", ["เพิ่มความเร็วอินเทอร์เน็ต","สร้างช่องทางสื่อสารที่เข้ารหัสและเป็นส่วนตัวผ่านเครือข่ายสาธารณะ","หลบเลี่ยงการสแกนไวรัส","บีบอัดขนาดไฟล์ก่อนส่ง"], 1],
+  ]
+},
+{
+  name: "กฎหมายดิจิทัลและเทคโนโลยีสมัยใหม่",
+  short: "หมวด 7 · กฎหมายดิจิทัล",
+  questions: [
+    ["กฎหมาย PDPA ย่อมาจากอะไร?", ["พ.ร.บ. ว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์","พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล","พ.ร.บ. การรักษาความมั่นคงปลอดภัยไซเบอร์","พ.ร.บ. ธุรกรรมทางอิเล็กทรอนิกส์"], 1],
+    ["ตาม พ.ร.บ. คอมพิวเตอร์ การกด Share ข้อมูลที่เป็นข่าวปลอมซึ่งสร้างความตื่นตระหนก มีความผิดหรือไม่?", ["ไม่ผิดเพราะไม่ได้เป็นคนสร้าง","ผิดเฉพาะเมื่อได้ผลประโยชน์ทางการเงิน","มีความผิดฐานนำเข้า/เผยแพร่ข้อมูลคอมพิวเตอร์อันเป็นเท็จ","ไม่ผิดหากแชร์ในกลุ่มปิด"], 2],
+    ["ข้อใดจัดเป็นข้อมูลส่วนบุคคลที่มีความอ่อนไหว (Sensitive Data) ตามกฎหมาย PDPA?", ["ชื่อ-นามสกุล","ข้อมูลประวัติสุขภาพ","เบอร์โทรศัพท์ที่ทำงาน","ที่อยู่อีเมล"], 1],
+    ["มัลแวร์ประเภทใดที่ทำการเข้ารหัสไฟล์ในเครื่องเหยื่อแล้วขู่เรียกรับเงินเพื่อปลดล็อก?", ["Spyware","Adware","Ransomware","Logic Bomb"], 2],
+    ["การเข้าสู่ระบบคอมพิวเตอร์ของผู้อื่นโดยมิชอบและมีมาตรการป้องกันการเข้าถึง ตาม พ.ร.บ. คอมพิวเตอร์ มีโทษอย่างไร?", ["ไม่ผิดกฎหมายอาญา","มีความผิดและมีโทษจำคุก/ปรับ","โทษปรับอย่างเดียว","ผิดเฉพาะคดีแพ่ง"], 1],
+    ["เทคโนโลยีคลาวด์ (Cloud Computing) แบบใดที่ให้บริการซอฟต์แวร์ผ่านอินเทอร์เน็ต เช่น Google Workspace?", ["IaaS","PaaS","SaaS","DaaS"], 2],
+    ["ข้อใดคือตัวอย่างของเทคโนโลยี AI แบบ Generative ที่กำลังเป็นที่นิยมในการสร้างข้อความและบทความ?", ["Siri","ChatGPT","Google Maps","Face ID"], 1],
+    ["การยืนยันตัวตนแบบ 2FA (Two-Factor Authentication) คืออะไร?", ["การใช้รหัสผ่าน 2 ชุดพร้อมกัน","การใช้รหัสผ่านร่วมกับปัจจัยอื่น เช่น รหัส OTP จากมือถือ","การสแกนนิ้วมือ 2 นิ้ว","การเปลี่ยนรหัสผ่านทุกๆ 2 เดือน"], 1],
+    ["ข้อใดคือประโยชน์หลักของการสำรองข้อมูล (Backup) บน Cloud Storage?", ["ป้องกันความเสียหายทางกายภาพของฮาร์ดแวร์","เร่งความเร็วซีพียู","ทำลายไวรัสอัตโนมัติ","ลดค่าไฟ"], 0],
+    ["ระบบเทคโนโลยีฐานข้อมูลแบบกระจายศูนย์ที่ใช้เทคนิคการเข้ารหัส นิยมใช้กับคริปโทเคอร์เรนซี คือเทคโนโลยีใด?", ["Blockchain","Big Data","IoT","5G"], 0],
+    ["การนำอุปกรณ์เครื่องใช้ในชีวิตประจำวันมาเชื่อมต่อและสั่งการผ่านอินเทอร์เน็ต เรียกว่าเทคโนโลยีอะไร?", ["AI","IoT (Internet of Things)","VR","AR"], 1],
+    ["ตามกฎหมาย PDPA บุคคลหรือนิติบุคคลที่มีอำนาจตัดสินใจเกี่ยวกับการประมวลผลข้อมูลส่วนบุคคล เรียกว่าอะไร?", ["ผู้ควบคุมข้อมูลส่วนบุคคล (Data Controller)","ผู้ประมวลผลข้อมูลส่วนบุคคล (Data Processor)","เจ้าของข้อมูลส่วนบุคคล (Data Subject)","เจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล (DPO)"], 0],
+    ["หากเจ้าพนักงานตำรวจต้องการข้อมูลจราจรคอมพิวเตอร์ (Log file) จากผู้ให้บริการ ต้องขอให้ผู้ให้บริการเก็บรักษาไว้อย่างน้อยกี่วันตาม พ.ร.บ. คอมฯ?", ["30 วัน","60 วัน","90 วัน","180 วัน"], 2],
+    ["ข้อใดจัดเป็นภัยคุกคามทางไซเบอร์ที่ใช้วิธีการหลอกลวงทางจิตวิทยาให้คนหลงเชื่อและให้ข้อมูลสำคัญ?", ["SQL Injection","Social Engineering","Port Scanning","Packet Sniffing"], 1],
+    ["การใช้ซอฟต์แวร์ที่ละเมิดลิขสิทธิ์ (แครก/เถื่อน) ในหน่วยงานราชการ มีความเสี่ยงในเรื่องใดมากที่สุดในทางปฏิบัติ?", ["ทำให้เครื่องทำงานเร็วขึ้น","เครื่องอาจติดมัลแวร์ที่ฝังมากับโปรแกรมแครกและเกิดช่องโหว่ทางความปลอดภัย","ลดภาระแบนด์วิธของเครือข่าย","ทำให้ฮาร์ดแวร์มีอายุการใช้งานยาวนานขึ้น"], 1],
+  ]
+},
+];
+
+// ---------- state ----------
+let quizQueue = [];      // list of {catIdx, qIdx}
+let current = 0;
+let selectedAnswers = []; // parallel to quizQueue: null or chosen index
+let quizLabel = "";
+
+// ---------- landing render ----------
+function renderLanding(){
+  const grid = document.getElementById('cat-grid');
+  grid.innerHTML = '';
+  CATEGORIES.forEach((cat, i)=>{
+    const card = document.createElement('button');
+    card.className = 'cat-card';
+    card.onclick = ()=>startQuiz(i);
+    card.innerHTML = `
+      <div class="seal"></div>
+      <div class="num">หมวด ${String(i+1).padStart(2,'0')}</div>
+      <div class="title">${cat.name}</div>
+      <div class="count">${cat.questions.length} ข้อ</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+function startQuiz(catIdx){
+  quizQueue = [];
+  if(catIdx===null){
+    quizLabel = "ข้อสอบเต็มรูปแบบ";
+    CATEGORIES.forEach((cat,ci)=>{
+      cat.questions.forEach((q,qi)=>quizQueue.push({catIdx:ci, qIdx:qi}));
+    });
+  } else {
+    quizLabel = CATEGORIES[catIdx].name;
+    CATEGORIES[catIdx].questions.forEach((q,qi)=>quizQueue.push({catIdx, qIdx:qi}));
+  }
+  selectedAnswers = new Array(quizQueue.length).fill(null);
+  current = 0;
+  document.getElementById('screen-landing').classList.add('hidden');
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  buildProgress();
+  renderQuestion();
+}
+
+function buildProgress(){
+  const track = document.getElementById('progress-track');
+  track.innerHTML = '';
+  quizQueue.forEach(()=>{
+    const seg = document.createElement('div');
+    seg.className = 'progress-seg';
+    track.appendChild(seg);
+  });
+}
+
+function updateProgress(){
+  const segs = document.querySelectorAll('.progress-seg');
+  segs.forEach((s,i)=>{
+    s.classList.toggle('done', i<=current && selectedAnswers[i]!==null);
+  });
+  const answeredCount = selectedAnswers.filter(a=>a!==null).length;
+  const correctCount = selectedAnswers.reduce((acc,a,i)=>{
+    if(a===null) return acc;
+    const item = quizQueue[i];
+    const correct = CATEGORIES[item.catIdx].questions[item.qIdx][2];
+    return acc + (a===correct?1:0);
+  },0);
+  document.getElementById('live-score').textContent = `${correctCount}/${answeredCount}`;
+}
+
+function renderQuestion(){
+  const item = quizQueue[current];
+  const cat = CATEGORIES[item.catIdx];
+  const [qText, opts, ansIdx] = cat.questions[item.qIdx];
+
+  document.getElementById('q-code').innerHTML =
+    `ข้อ ${String(current+1).padStart(3,'0')} / ${String(quizQueue.length).padStart(3,'0')} &nbsp;·&nbsp; <span class="tag">${cat.short}</span>`;
+  document.getElementById('q-text').textContent = qText;
+
+  const optWrap = document.getElementById('q-options');
+  optWrap.innerHTML = '';
+  const chosen = selectedAnswers[current];
+
+  opts.forEach((optText, idx)=>{
+    const btn = document.createElement('button');
+    btn.className = 'opt';
+    btn.innerHTML = `<span class="letter">${LETTERS[idx]}</span><span>${optText}</span>`;
+    if(chosen!==null){
+      btn.classList.add('locked');
+      if(idx===ansIdx) btn.classList.add('correct');
+      else if(idx===chosen) btn.classList.add('wrong');
+      else btn.classList.add('dim');
+    } else {
+      btn.onclick = ()=>selectAnswer(idx);
+    }
+    optWrap.appendChild(btn);
+  });
+
+  const fb = document.getElementById('feedback-text');
+  const nextBtn = document.getElementById('next-btn');
+  if(chosen!==null){
+    if(chosen===ansIdx){
+      fb.textContent = '✓ ตอบถูกต้อง';
+      fb.className = 'feedback-text ok';
+    } else {
+      fb.textContent = `✗ ตอบผิด — เฉลยคือ ${LETTERS[ansIdx]}`;
+      fb.className = 'feedback-text no';
+    }
+    nextBtn.classList.add('show');
+    nextBtn.textContent = (current===quizQueue.length-1) ? 'ดูผลสรุป →' : 'ข้อถัดไป →';
+  } else {
+    fb.textContent = '';
+    nextBtn.classList.remove('show');
+  }
+  updateProgress();
+}
+
+function selectAnswer(idx){
+  selectedAnswers[current] = idx;
+  renderQuestion();
+}
+
+function nextQuestion(){
+  if(current < quizQueue.length-1){
+    current++;
+    renderQuestion();
+    window.scrollTo({top:0, behavior:'smooth'});
+  } else {
+    showResult();
+  }
+}
+
+function exitQuiz(){
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-landing').classList.remove('hidden');
+}
+
+function backToLanding(){
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-landing').classList.remove('hidden');
+  window.scrollTo({top:0});
+}
+
+function restartSame(){
+  selectedAnswers = new Array(quizQueue.length).fill(null);
+  current = 0;
+  document.getElementById('screen-result').classList.add('hidden');
+  document.getElementById('screen-quiz').classList.remove('hidden');
+  document.getElementById('review-list').classList.remove('show');
+  buildProgress();
+  renderQuestion();
+  window.scrollTo({top:0});
+}
+
+function showResult(){
+  document.getElementById('screen-quiz').classList.add('hidden');
+  document.getElementById('screen-result').classList.remove('hidden');
+
+  const total = quizQueue.length;
+  let correct = 0;
+  const perCat = {};
+  quizQueue.forEach((item,i)=>{
+    const ansIdx = CATEGORIES[item.catIdx].questions[item.qIdx][2];
+    const catName = CATEGORIES[item.catIdx].short;
+    if(!perCat[catName]) perCat[catName] = {correct:0,total:0};
+    perCat[catName].total++;
+    if(selectedAnswers[i]===ansIdx){ correct++; perCat[catName].correct++; }
+  });
+  const pct = Math.round((correct/total)*100);
+
+  const stamp = document.getElementById('stamp');
+  const stampLabel = document.getElementById('stamp-label');
+  document.getElementById('stamp-pct').textContent = pct + '%';
+  if(pct>=80){ stampLabel.textContent='ผ่าน'; stamp.style.borderColor='var(--green)'; document.getElementById('stamp-pct').style.color='var(--green)'; stampLabel.style.color='var(--green)'; }
+  else if(pct>=50){ stampLabel.textContent='พอใช้'; stamp.style.borderColor='var(--gold)'; document.getElementById('stamp-pct').style.color='var(--gold)'; stampLabel.style.color='var(--gold)'; }
+  else { stampLabel.textContent='ควรทบทวน'; stamp.style.borderColor='var(--red)'; document.getElementById('stamp-pct').style.color='var(--red)'; stampLabel.style.color='var(--red)'; }
+
+  document.getElementById('result-headline').textContent = `ทำถูก ${correct} จาก ${total} ข้อ`;
+  document.getElementById('result-sub').textContent = `${quizLabel} · คะแนนรวม ${pct}%`;
+
+  const bdWrap = document.getElementById('breakdown');
+  bdWrap.innerHTML = '';
+  Object.entries(perCat).forEach(([name, d])=>{
+    const row = document.createElement('div');
+    row.className = 'bd-row';
+    const fillPct = Math.round((d.correct/d.total)*100);
+    row.innerHTML = `
+      <div class="bd-name">${name}</div>
+      <div class="bd-bar"><div class="bd-fill" style="width:${fillPct}%"></div></div>
+      <div class="bd-score">${d.correct}/${d.total}</div>
+    `;
+    bdWrap.appendChild(row);
+  });
+
+  // build review list (hidden until requested)
+  const reviewWrap = document.getElementById('review-list');
+  reviewWrap.innerHTML = '';
+  reviewWrap.classList.remove('show');
+  quizQueue.forEach((item,i)=>{
+    const [qText, opts, ansIdx] = CATEGORIES[item.catIdx].questions[item.qIdx];
+    if(selectedAnswers[i]!==ansIdx){
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <div class="rq">${qText}</div>
+        <div class="ra your">คุณตอบ: ${selectedAnswers[i]===null?'ไม่ได้ตอบ':LETTERS[selectedAnswers[i]]+'. '+opts[selectedAnswers[i]]}</div>
+        <div class="ra right">เฉลย: ${LETTERS[ansIdx]}. ${opts[ansIdx]}</div>
+      `;
+      reviewWrap.appendChild(div);
+    }
+  });
+  if(reviewWrap.innerHTML===''){
+    reviewWrap.innerHTML = '<div class="review-item">ยินดีด้วย ตอบถูกทุกข้อ 🎉</div>';
+  }
+  window.scrollTo({top:0});
+}
+
+function showReview(){
+  document.getElementById('review-list').classList.add('show');
+}
+
+// ================= online layer (Google Apps Script) =================
+const API_URL='https://script.google.com/macros/s/AKfycbxoNPl-aFj-u2icXamgxwUZgXKMyjcPtNDewrxmOM14YF3O0ZLVCh6D50ZOFrlbMso7/exec';   // <-- ใส่ Web app URL จาก Apps Script
+async function api(body){
+  if(API_URL.startsWith('PASTE')) throw new Error('noconfig');
+  const r=await fetch(API_URL,{method:'POST',body:JSON.stringify(body)});
+  return await r.json();
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let currentSession=null, studentName='', studentPin='', saved=false;
+function setErr(m){document.getElementById('login-err').textContent=m||''}
+
+async function enterTest(){
+  const name=document.getElementById('in-name').value.trim(), pin=document.getElementById('in-pin').value.trim();
+  if(name.length<2) return setErr('กรอกชื่อ-นามสกุลก่อนเริ่มสอบ');
+  if(!/^\d{4,8}$/.test(pin)) return setErr('PIN เป็นตัวเลข 4–8 หลัก');
+  const btn=document.getElementById('enter-btn'); btn.disabled=true; setErr('');
+  try{
+    const r=await api({a:'verify',pin});
+    if(!r.ok){setErr('PIN ไม่ถูกต้อง หรือผู้ติวปิดการสอบแล้ว');return}
+    currentSession=r; studentName=name; studentPin=pin; saved=false;
+    startQuiz(r.cat>=0?r.cat:null); window.scrollTo({top:0});
+  }catch(e){ setErr(e.message==='noconfig'?'ยังไม่ได้ตั้งค่า API_URL ในไฟล์':'เชื่อมต่อระบบไม่ได้ ตรวจอินเทอร์เน็ตแล้วลองใหม่') }
+  finally{btn.disabled=false}
+}
+
+const _showResult=showResult;
+showResult=function(){
+  _showResult();
+  if(!currentSession||saved) return;
+  const perCat={}; let correct=0;
+  quizQueue.forEach((it,i)=>{const ok=selectedAnswers[i]===CATEGORIES[it.catIdx].questions[it.qIdx][2];
+    const k=CATEGORIES[it.catIdx].short; perCat[k]=perCat[k]||{c:0,t:0}; perCat[k].t++; if(ok){perCat[k].c++;correct++}});
+  const payload={a:'submit',pin:studentPin,name:studentName,score:correct,total:quizQueue.length,perCat};
+  const sub=document.getElementById('result-sub'), base=sub.textContent;
+  const send=async()=>{
+    sub.textContent=base+' · กำลังส่งคะแนน…';
+    try{ const r=await api(payload); if(!r.ok) throw 0; saved=true; sub.textContent=base+' · ส่งคะแนนให้ผู้ติวแล้ว ✓'; }
+    catch(e){ sub.innerHTML=esc(base)+' · <span style="color:var(--red)">ส่งคะแนนไม่สำเร็จ</span> <button class="btn" style="padding:4px 12px;font-size:13px" id="retry-btn">ส่งอีกครั้ง</button>'; document.getElementById('retry-btn').onclick=send; }
+  };
+  send();
+};
+
+// ================= tutor dashboard =================
+let adminKey=sessionStorage.getItem('ak')||'', sessions=[], results=[], selId=null, timer=null;
+function route(){
+  const tutor=location.hash==='#tutor';
+  document.getElementById('screen-dash').classList.toggle('hidden',!tutor);
+  if(tutor){ ['screen-landing','screen-quiz','screen-result'].forEach(id=>document.getElementById(id).classList.add('hidden')); dashStart(); }
+  else { clearInterval(timer); if(document.getElementById('screen-quiz').classList.contains('hidden')&&document.getElementById('screen-result').classList.contains('hidden')) document.getElementById('screen-landing').classList.remove('hidden'); }
+}
+window.addEventListener('hashchange',route); route();
+
+function dashStart(){
+  clearInterval(timer);
+  const body=document.getElementById('dash-body');
+  if(!adminKey){
+    body.innerHTML='<div class="login-card"><label>รหัสผู้ติว (ADMIN_KEY)<input id="ak" type="password"></label><div class="err" id="ak-err"></div><button class="btn primary" onclick="setKey()">เข้าสู่แดชบอร์ด</button></div>';
+    return;
+  }
+  drawShell(); refresh(); timer=setInterval(refresh,8000);
+}
+async function setKey(){ adminKey=document.getElementById('ak').value; sessionStorage.setItem('ak',adminKey); dashStart(); }
+async function refresh(){
+  try{
+    const r=await api({a:'list',key:adminKey});
+    if(r.err==='auth'){adminKey='';sessionStorage.removeItem('ak');dashStart();const e=document.getElementById('ak-err');if(e)e.textContent='รหัสไม่ถูกต้อง';return}
+    if(!r.ok) return;
+    sessions=r.sessions; results=r.results; if(!selId&&sessions[0]) selId=sessions[0].id;
+    drawSessions(); drawResults();
+  }catch(e){ const l=document.getElementById('s-list'); if(l&&!sessions.length) l.innerHTML='<small style="color:var(--red)">เชื่อมต่อระบบไม่ได้ (ตรวจ API_URL และการ Deploy)</small>'; }
+}
+function drawShell(){
+  const opts='<option value="-1">ข้อสอบเต็ม 100 ข้อ</option>'+CATEGORIES.map((c,i)=>`<option value="${i}">${esc(c.short)} (${c.questions.length} ข้อ)</option>`).join('');
+  document.getElementById('dash-body').innerHTML=`
+  <div class="dcard"><h3>สร้างรอบสอบใหม่</h3>
+    <div class="frow"><label>ชื่อรอบสอบ<input id="s-title" placeholder="เช่น ติวรอบ 22 พ.ย."></label>
+    <label>PIN (4–8 หลัก)<input id="s-pin" class="mono" inputmode="numeric" maxlength="8"></label>
+    <label>ขอบเขตข้อสอบ<select id="s-cat">${opts}</select></label>
+    <button class="btn primary sm" onclick="createSession()">สร้าง</button></div>
+    <div class="err" id="s-err"></div></div>
+  <div class="dcard"><h3>รอบสอบ</h3><div id="s-list"><small style="color:var(--muted)">กำลังโหลด…</small></div></div>
+  <div id="r-area"></div>`;
+}
+async function createSession(){
+  const t=document.getElementById('s-title').value.trim(),p=document.getElementById('s-pin').value.trim(),e=document.getElementById('s-err');
+  if(!t) return e.textContent='ตั้งชื่อรอบสอบก่อน';
+  if(!/^\d{4,8}$/.test(p)) return e.textContent='PIN เป็นตัวเลข 4–8 หลัก';
+  e.textContent='';
+  try{ const r=await api({a:'create',key:adminKey,title:t,pin:p,cat:+document.getElementById('s-cat').value});
+    if(!r.ok) return e.textContent=r.err==='dup'?'PIN นี้ถูกใช้กับรอบที่เปิดอยู่แล้ว':'สร้างไม่สำเร็จ';
+    document.getElementById('s-title').value='';document.getElementById('s-pin').value=''; selId=null; refresh();
+  }catch(x){e.textContent='เชื่อมต่อระบบไม่ได้'}
+}
+async function toggleS(id,open){ await api({a:'toggle',key:adminKey,id,open}); refresh(); }
+function drawSessions(){
+  const el=document.getElementById('s-list'); if(!el) return;
+  el.innerHTML=sessions.length?sessions.map(s=>{const n=results.filter(r=>r.sid===s.id).length;
+   return `<div class="srow ${s.id===selId?'sel':''}" onclick="selId='${s.id}';drawSessions();drawResults()">
+   <div class="sn">${esc(s.title)}<br><small>PIN ${esc(s.pin)} · ${s.cat>=0&&CATEGORIES[s.cat]?esc(CATEGORIES[s.cat].short):'ข้อสอบเต็ม'} · ส่งแล้ว ${n} ครั้ง</small></div>
+   <span class="pill ${s.open?'':'off'}">${s.open?'เปิด':'ปิด'}</span>
+   <button class="btn sm" onclick="event.stopPropagation();toggleS('${s.id}',${!s.open})">${s.open?'ปิดรับ':'เปิดรับ'}</button></div>`}).join(''):'<small style="color:var(--muted)">ยังไม่มีรอบสอบ สร้างรอบแรกด้านบน</small>';
+}
+function drawResults(){
+  const el=document.getElementById('r-area'); if(!el) return;
+  const s=sessions.find(x=>x.id===selId); if(!s){el.innerHTML='';return}
+  const rs=results.filter(r=>r.sid===s.id).sort((a,b)=>b.pct-a.pct);
+  const n=rs.length, avg=n?Math.round(rs.reduce((a,r)=>a+r.pct,0)/n):0, pass=n?Math.round(rs.filter(r=>r.pct>=60).length/n*100):0, top=n?rs[0].pct:0;
+  const cats={}; rs.forEach(r=>Object.entries(r.perCat||{}).forEach(([k,v])=>{cats[k]=cats[k]||{c:0,t:0};cats[k].c+=v.c;cats[k].t+=v.t}));
+  el.innerHTML=`<div class="dcard"><h3>ผลคะแนน — ${esc(s.title)}</h3>
+  <div class="kpis"><div class="kpi"><b>${n}</b><span>ครั้งที่ส่ง</span></div><div class="kpi"><b>${avg}%</b><span>คะแนนเฉลี่ย</span></div><div class="kpi"><b>${top}%</b><span>สูงสุด</span></div><div class="kpi"><b>${pass}%</b><span>ผ่านเกณฑ์ 60%</span></div></div>
+  ${n?`<div class="tw"><table><tr><th>#</th><th>ชื่อ</th><th>คะแนน</th><th>%</th><th>เวลาส่ง</th></tr>${rs.map((r,i)=>`<tr><td class="n">${i+1}</td><td>${esc(r.name)}</td><td class="n">${r.score}/${r.total}</td><td class="n" style="color:${r.pct>=60?'var(--green)':'var(--red)'}">${r.pct}%</td><td class="n">${new Date(r.ts).toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</td></tr>`).join('')}</table></div>
+  <h3 style="margin-top:22px">ความแม่นรายหมวด (ทั้งรอบ)</h3>${Object.entries(cats).map(([k,v])=>{const p=Math.round(v.c/v.t*100);return `<div class="bd-row" style="margin-bottom:6px"><div class="bd-name">${esc(k)}</div><div class="hbar"><i style="width:${p}%"></i></div><div class="bd-score">${p}%</div></div>`}).join('')}
+  <button class="btn sm" style="margin-top:14px" onclick="exportCsv()">ดาวน์โหลด CSV</button>`:'<small style="color:var(--muted)">ยังไม่มีนักเรียนส่งคะแนน — หน้านี้รีเฟรชเองทุก 8 วินาที</small>'}</div>`;
+}
+function exportCsv(){
+  const s=sessions.find(x=>x.id===selId), rs=results.filter(r=>r.sid===selId).sort((a,b)=>b.pct-a.pct);
+  const q=v=>'"'+String(v).replace(/"/g,'""')+'"';
+  const csv='\ufeffชื่อ,คะแนน,เต็ม,เปอร์เซ็นต์,เวลา\n'+rs.map(r=>[q(r.name),r.score,r.total,r.pct,q(new Date(r.ts).toLocaleString('th-TH'))].join(',')).join('\n');
+  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})); a.download=(s?s.title:'results')+'.csv'; a.click();
+}
+</script>
+</body>
+</html>
